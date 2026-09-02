@@ -1,0 +1,20 @@
+# All commands must be run from the 'backend/' directory
+
+1. Run FastAPI Server:
+   $env:PYTHONPATH="."; python main.py
+
+2. Run Celery Worker (Required for "PROCESSING"):
+   $env:PYTHONPATH="."; celery -A app.workers.celery_app worker --loglevel=info -P solo
+
+   NOTE: If the status stays "queued", make sure this command is running in a separate terminal.
+   The '-P solo' flag is recommended for Windows.
+
+3. Run Local Redis (Optional, only if NOT using Upstash Cloud Redis):
+   docker run -d -p 6379:6379 --name redis-local redis
+
+4. Clean/Kill Ports (If you see "WinError 10013" or "Port in use"):
+   # Find the Process ID (PID) using the port (e.g., 8000)
+   netstat -ano | findstr :8000
+   
+   # Kill the process using its PID (replace <PID> with the number from the last column)
+   taskkill /F /PID <PID>
